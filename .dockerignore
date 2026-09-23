@@ -1,0 +1,4 @@
+BuildTools/*.yml
+BuildTools/ruby/*.dockerfile
+BuildTools/scripts/*
+.idea

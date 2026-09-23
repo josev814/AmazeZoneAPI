@@ -1,0 +1,67 @@
+ARG RUBY_VERSION=3.4
+ARG RUBY_OS=slim-trixie
+FROM ruby:${RUBY_VERSION}-${RUBY_OS}
+
+SHELL ["/bin/bash", "-c"]
+
+RUN apt-get update -qq \
+    && apt-get install -y \
+        # for healthchecks
+        netcat-openbsd \
+        curl \
+        # for building native extensions
+        build-essential \
+        tzdata \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* 
+
+# copy node binary from node image to avoid installing nodejs via apt-get
+COPY --from=node:24-trixie-slim /usr/local/bin/node /usr/local/bin/node
+
+RUN apt-get update -qq \
+    && apt-get install -y \
+        # for nokogiri
+        libyaml-dev \
+        # for sqlite3
+        pkg-config \
+        libsqlite3-dev \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* 
+
+WORKDIR /app
+
+# Copy the Gemfile and Gemfile.lock first to leverage Docker cache
+COPY Gemfile Gemfile.lock ./
+
+# container builds are set to prod
+# when compose runs, if we're doing development the .env file will override this setting
+ENV RAILS_ENV=production
+
+# Update RubyGems, which also refreshes the default bundler shipped with Ruby
+# (e.g. 4.0.21 on the current ruby:3.4 image).
+# Do NOT `gem install bundler` here: an explicitly installed bundler lands in
+# GEM_HOME (/usr/local/bundle). That directory is persisted by the gem_cache
+# volume in BuildTools/docker-compose.yml, so a pinned version there survives
+# image rebuilds and shadows the default bundler at runtime (this is what left
+# a stale bundler 2.4.x active and caused the "already initialized constant
+# Gem::Platform::X64_LINUX_MUSL" warnings on Ruby 3.4).
+# Re-stamp Gemfile.lock's BUNDLED WITH to the active bundler. Note: Bundler 4
+# renamed `--update-bundler` to `--bundler`.
+RUN gem update --system \
+    && bundle lock --bundler
+
+# Install the gems exactly as pinned by Gemfile.lock (deterministic; the lock
+# is baked into this layer, so it re-runs whenever Gemfile/Gemfile.lock change).
+RUN bundle install
+
+# Copy the rest of the application code
+COPY . .
+
+COPY "BuildTools/ruby/entrypoint.sh" /
+ENTRYPOINT ["/entrypoint.sh"]
+
+EXPOSE 3005
+
+# NOTE: use `bundle exec` so the server boots with the locked gem set. A bare
+# `rails` resolves through the binstubs in GEM_HOME (/usr/local/bundle/bin),
+# which can be pinned to a stale version left behind in the persisted
+# gem_cache volume and would boot the app on the wrong gem set.
+CMD [ "bundle", "exec", "rails", "server", "-b", "0.0.0.0", "--port", "3005" ]

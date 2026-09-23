@@ -1,0 +1,96 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = false
+max_line_length = 120
+tab_width = 4
+ij_continuation_indent_size = 8
+ij_formatter_off_tag = @formatter:off
+ij_formatter_on_tag = @formatter:on
+ij_formatter_tags_enabled = true
+ij_smart_tabs = false
+ij_visual_guides = 
+ij_wrap_on_typing = false
+
+[{*.ps1}]
+end_of_line = crlf
+
+[{*.bash,*.sh,*.zsh}]
+indent_size = 2
+tab_width = 2
+ij_shell_binary_ops_start_line = false
+ij_shell_keep_column_alignment_padding = false
+ij_shell_minify_program = false
+ij_shell_redirect_followed_by_space = false
+ij_shell_switch_cases_indented = false
+ij_shell_use_unix_line_separator = true
+
+[{*.gemspec,*.jbuilder,*.rake,*.rb,*.rbi,*.rbw,*.ru,*.thor,.simplecov,capfile,gemfile,guardfile,isolate,rakefile,steepfile,vagrantfile}]
+ij_ruby_align_group_field_declarations = false
+ij_ruby_align_multiline_parameters = true
+ij_ruby_binary_expressions_alignment = 2
+ij_ruby_blank_lines_around_class = 1
+ij_ruby_blank_lines_around_method = 1
+ij_ruby_chain_calls_alignment = 2
+ij_ruby_convert_brace_block_by_enter = true
+ij_ruby_empty_declarations_style = 1
+ij_ruby_force_newlines_around_visibility_mods = true
+ij_ruby_indent_private_methods = false
+ij_ruby_indent_protected_methods = false
+ij_ruby_indent_public_methods = false
+ij_ruby_indent_visibility_modifiers = true
+ij_ruby_indent_when_cases = false
+ij_ruby_keep_blank_lines_in_code = 1
+ij_ruby_keep_blank_lines_in_declarations = 1
+ij_ruby_keep_line_breaks = true
+ij_ruby_parentheses_around_method_arguments = true
+ij_ruby_selected_external_formatter = 
+ij_ruby_spaces_around_assignment_operators = true
+ij_ruby_spaces_around_hashrocket = true
+ij_ruby_spaces_around_other_operators = true
+ij_ruby_spaces_around_pow_operators = true
+ij_ruby_spaces_around_range_operators = false
+ij_ruby_spaces_around_relational_operators = true
+ij_ruby_spaces_within_array_initializer_braces = true
+ij_ruby_spaces_within_array_literals = false
+ij_ruby_spaces_within_braces = true
+ij_ruby_spaces_within_pipes = false
+ij_ruby_use_external_formatter = false
+
+[{*.markdown,*.md}]
+ij_markdown_force_one_space_after_blockquote_symbol = true
+ij_markdown_force_one_space_after_header_symbol = true
+ij_markdown_force_one_space_after_list_bullet = true
+ij_markdown_force_one_space_between_words = true
+ij_markdown_format_tables = true
+ij_markdown_insert_quote_arrows_on_wrap = true
+ij_markdown_keep_indents_on_empty_lines = false
+ij_markdown_keep_line_breaks_inside_text_blocks = true
+ij_markdown_max_lines_around_block_elements = 1
+ij_markdown_max_lines_around_header = 1
+ij_markdown_max_lines_between_paragraphs = 1
+ij_markdown_min_lines_around_block_elements = 1
+ij_markdown_min_lines_around_header = 1
+ij_markdown_min_lines_between_paragraphs = 1
+ij_markdown_wrap_text_if_long = true
+ij_markdown_wrap_text_inside_blockquotes = true
+
+[{*.yaml,*.yml}]
+indent_size = 2
+ij_yaml_align_values_properties = do_not_align
+ij_yaml_autoinsert_sequence_marker = true
+ij_yaml_block_mapping_on_new_line = false
+ij_yaml_indent_sequence_value = true
+ij_yaml_keep_indents_on_empty_lines = false
+ij_yaml_keep_line_breaks = true
+ij_yaml_line_comment_add_space = false
+ij_yaml_line_comment_add_space_on_reformat = false
+ij_yaml_line_comment_at_first_column = true
+ij_yaml_sequence_on_new_line = false
+ij_yaml_space_before_colon = false
+ij_yaml_spaces_within_braces = true
+ij_yaml_spaces_within_brackets = true

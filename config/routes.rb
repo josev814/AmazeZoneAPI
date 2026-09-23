@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "healthz", to: "rails/health#show", as: :rails_health_check
 
   post '/auth/login', to: 'auth#login'
 

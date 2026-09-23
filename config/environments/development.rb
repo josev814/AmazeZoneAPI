@@ -61,4 +61,13 @@ Rails.application.configure do
 
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
+  #
+  # Note: JSON is already the default response format for this app -
+  # `config.api_only = true` in config/application.rb makes every controller
+  # inherit from ActionController::API, and all endpoints render JSON
+  # explicitly (e.g. `render json: ...`). Do NOT use
+  # `config.default_response_format` here: no such
+  # Rails::Application::Configuration method exists (it is not a Rails API),
+  # and adding it makes the development environment fail to boot with
+  # NoMethodError.
 end

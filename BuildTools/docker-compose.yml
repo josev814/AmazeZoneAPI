@@ -1,0 +1,73 @@
+name: AmazezoneAPI
+
+x-logging: &logging
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  ruby:
+    build:
+      context: ..
+      dockerfile: BuildTools/ruby/dockerfile
+    image: amazezone_api:local
+    # Build the image only if it does not exist locally (a normal `up` does not
+    # rebuild; pass `--build` to force a rebuild, e.g. after Gemfile/dockerfile changes).
+    pull_policy: missing
+    container_name: amazezone_api
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      # Bind-mount the repo into the container so edits are picked up without a rebuild.
+      - ..:/app
+      - gem_cache:/usr/local/bundle
+    ports:
+      # Host port is configurable via API_PORT in BuildTools/.env (default 3005); the container always listens on 3005.
+      - "${API_PORT:-3005}:3005"
+    healthcheck:
+      test: ["CMD", "curl", "-i", "http://localhost:3005/healthz"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    logging:
+      <<: *logging
+    networks:
+      - public
+
+  # Test service: runs the RSpec suite in a one-shot container and exits.
+  #
+  # It sits behind the "test" profile, so a plain `docker compose up` (and the
+  # BuildTools scripts) never start it. Start it explicitly, e.g.:
+  #   docker compose --profile test run --rm test
+  #   docker compose --profile test run --rm test bundle exec rspec spec/requests/auth_spec.rb
+  #
+  # It reuses the ruby image and bind-mounts the repo (like ruby), so spec
+  # edits are picked up without a rebuild; only Gemfile changes need a rebuild.
+  # RAILS_ENV=test is set here, which takes precedence over the .env file
+  # (RAILS_ENV=development), so the suite always runs against the test
+  # environment and db/test.sqlite3 - never the development database.
+  # See TESTING.md at the repo root for details.
+  test:
+    profiles: ["test"]
+    image: amazezone_api:local
+    container_name: amazezone_api_test
+    env_file:
+      - .env
+    environment:
+      RAILS_ENV: test
+    volumes:
+      - ..:/app
+      - gem_cache:/usr/local/bundle
+    command: ["bundle", "exec", "rspec"]
+    logging:
+      <<: *logging
+    networks:
+      - public
+
+networks:
+  public:
+
+volumes:
+  gem_cache:

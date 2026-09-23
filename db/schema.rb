@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_24_225001) do
+ActiveRecord::Schema[8.0].define(version: 2023_09_24_225001) do
   create_table "products", force: :cascade do |t|
     t.string "name"
     t.string "category"
@@ -29,5 +29,4 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_24_225001) do
     t.datetime "updated_at", null: false
     t.string "password_digest"
   end
-
 end
